@@ -19,7 +19,7 @@ public class UnilinkApplication {
 	
 	@RequestMapping("/")
 	public String greeting() {
-		return "Unilink app.\n"
+		return "Welcome to Unilink, we are still in development:/ .\n"
 				+ "Use the API methods to interact with the backend!!!";
 	}
 	
