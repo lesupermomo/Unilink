@@ -29,6 +29,27 @@ public class Resource {
 	labelRepository labelRepository;
 
 	
+	@GetMapping("/")
+	public String home() {
+		return("<h1> Welcome to Unilink <h1> ");
+	}
+	
+	@GetMapping("/user")
+	public String user() {
+		return("<h1> Welcome User to Unilink ;)<h1> ");
+	}
+	
+	@GetMapping("/admin")
+	public String admin() {
+		return("<h1> HELLO ADMIN, GOOD LUCK MA MAN<h1> ");
+	}
+	
+	
+	/**
+	 * 
+	 * Starting from here are REST methods to contact load and get projects
+	 */
+	
 	@GetMapping(value = "/allUsers")
 	public List<User> getAllUsers(){
 		return userRepository.findAll();
