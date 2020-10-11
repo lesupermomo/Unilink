@@ -1,5 +1,6 @@
 package com.unilink.backend.unilink.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -48,17 +49,69 @@ public class User {
 	@ManyToMany(mappedBy = "members")
 	private List<Project> projects;
 	
+	//projects you applied to
 	@ManyToMany(mappedBy = "applicants")
 	private List<Project> applied;
 	
-
+	
 	@OneToMany(mappedBy = "creator")
-	private List<Project> postings;
+	private List<Project> created;
 	
 
 	
 	public User() {
 	}
+	
+	
+	public void addProjectMember(Project project) {
+		if(projects==null) {
+			projects=new ArrayList<Project>();
+		}
+		this.projects.add(project);
+	}
+	
+	public List<Project> getProjectMember() {
+		return projects;
+	}
+	
+	public Boolean removeProjectMember(Project project) {
+		return projects.remove(project);
+	}
+	
+	
+	public void addProjectApplied(Project p) {
+		if(applied==null) {
+			applied=new ArrayList<Project>();
+		}
+		this.applied.add(p);
+	}
+	
+	public Boolean removeProjectApplied(Project project) {
+		return applied.remove(project);
+	
+	}
+	
+	public List<Project> getProjectApplied(){
+		return applied;
+	}
+	
+	public void addProjectCreator(Project project) {
+		if(created==null) {
+			created=new ArrayList<Project>();
+		}
+		if(projects==null) {
+			projects=new ArrayList<Project>();
+		}
+		this.created.add(project);
+		this.projects.add(project);
+	}
+	
+	public List<Project> getProjectCreator() {
+		return this.created;
+	}
+
+	
+	
 	
 	public String getEmail() {
 		return email;

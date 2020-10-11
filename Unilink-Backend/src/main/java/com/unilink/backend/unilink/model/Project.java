@@ -1,5 +1,6 @@
 package com.unilink.backend.unilink.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -55,6 +56,27 @@ public class Project {
 		return this.creator;
 	}
 	
+	public List<User> getMember(){
+		return members;
+	}
+	
+	public List<User> getApplicants(){
+		return applicants;
+	}
+	
+	public void addMember(User e) {
+		if(this.members==null) {
+			this.members=new ArrayList<User>();
+		}
+		members.add(e);
+	}
+	public void addApplicant(User e) {
+		if(this.applicants==null) {
+			this.applicants=new ArrayList<User>();
+		}
+		applicants.add(e);
+	}
+	
 	public void setCreator(User user) {
 		this.creator=user;
 	}
@@ -81,6 +103,11 @@ public class Project {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public void removeApplicant(User user) {
+		this.applicants.remove(user);
+		
 	}
 
 	
