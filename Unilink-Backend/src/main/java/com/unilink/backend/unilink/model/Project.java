@@ -51,6 +51,14 @@ public class Project {
 	private User creator;
 	
 	
+	public User getCreator(){
+		return this.creator;
+	}
+	
+	public void setCreator(User user) {
+		this.creator=user;
+	}
+	
 	public Integer getId() {
 		return id;
 	}
