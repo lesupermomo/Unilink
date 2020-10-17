@@ -1,14 +1,18 @@
 package com.unilink.backend.unilink.resource;
 
+import com.unilink.backend.unilink.dto.CredentialDto;
+import com.unilink.backend.unilink.dto.ProjectDto;
 import com.unilink.backend.unilink.dto.UserDto;
 import com.unilink.backend.unilink.model.Label;
 import com.unilink.backend.unilink.model.Project;
 import com.unilink.backend.unilink.model.User;
+import com.unilink.backend.unilink.repository.LabelRepository;
 import com.unilink.backend.unilink.repository.ProjectRepository;
 import com.unilink.backend.unilink.repository.UserRepository;
-import com.unilink.backend.unilink.repository.labelRepository;
+
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/rest")
+//@RequestMapping(value = "/")
 public class Resource {
 
 
@@ -31,11 +35,18 @@ public class Resource {
 	@Autowired
 	ProjectRepository projectRepository;
 	@Autowired
-	labelRepository labelRepository;
+	LabelRepository labelRepository;
 	
 	
-
-
+//
+//	@GetMapping("/login") //userDto {"email":"mail","password":"pass"}
+//	public String loginTemp (@RequestBody final UserDto e){
+//		
+//		return("<h1> Welcome to Unilink <h1> ");	
+//		
+//		
+//	}
+//	
 	@GetMapping("/")
 	public String home() {
 		return("<h1> Welcome to Unilink <h1> ");
@@ -58,87 +69,107 @@ public class Resource {
 	 */
 
 	@GetMapping(value = "/allUsers")
-	public List<User> getAllUsers(){
-		return userRepository.findAll();
+	public List<UserDto> getAllUsers(){
+		return convertUsersToDto(userRepository.findAll());
+
+	}	
+	
+	@GetMapping("/allProjects")
+	public List<ProjectDto> getAllProjects(){
+		return convertProjectsToDto(projectRepository.findAll());
 
 	}
 
-	@GetMapping(value = "/allProjects")
-	public List<Project> getAllProjects(){
-		return projectRepository.findAll();
-
-	}
-
-	@GetMapping(value = "/allLabels")
-	public List<Project> getAllLabels(){
-		return projectRepository.findAll();
+	@GetMapping("/allLabels")
+	public List<Label> getAllLabels(){
+		return labelRepository.findAll();
 
 	}
 	
-	@GetMapping(value = "/projectsOfUser/{email}")
-	public List<Project> getAllProjectsOfUser(@PathVariable("email")String email){
+	@GetMapping( "/projectsOfUser/{email}")
+	public List<ProjectDto> getAllProjectsOfUser(@PathVariable("email")String email){
 		User user= userRepository.findByEmail(email);
-		return user.getProjectMember();
+		return convertProjectsToDto(user.getProjectMember());
 
 	}
 
-	@PostMapping(value="/loginUser") //userDto {"email":"mail","password":"pass"}
-	public User login (@RequestBody final UserDto e){
+	@PostMapping("/loginUser") //userDto {"email":"mail","password":"pass"}
+	public UserDto login (@RequestBody final CredentialDto e){
 		
 		if(e!=null&&e.getEmail()!=null&&e.getPassword()!=null) {
 			User currentUser=userRepository.findByEmail(e.getEmail());
 			if(currentUser.getPassword().equals(e.getPassword())) {
-				return currentUser;
+				return new UserDto(currentUser);
 			}else {
 				return null;
 			}
 		}else{
 			return null;
 		}	
-				
-		
-		
 	}
 	
-	@PostMapping(value="/loadUser")
-	public List<User> persistUser (@RequestBody final User users){
-		userRepository.save(users);
-		return userRepository.findAll();
+	@PostMapping("/loadUser")
+	public UserDto persistUser (@RequestBody final UserDto userDto){
+		User user=new User(userDto);
+		userRepository.save(user);
+		return new UserDto(userRepository.findByEmail(user.getEmail()));
 	}
 
-	@PostMapping(value="/loadProject/{email}")
-	public Optional<Project> persistProject (@RequestBody final Project project,@PathVariable("email") String email){
+	//creating a project.
+	@PostMapping("/loadProject/{email}")
+	public ProjectDto persistProject (@RequestBody final ProjectDto projectDto,@PathVariable("email") String email){
+
 		User user= userRepository.findByEmail(email);
+		Project project= new Project(projectDto);
+		
 		project.setCreator(user);
 		user.addProjectCreator(project);
 		userRepository.save(user);
 		projectRepository.save(project);
-		return projectRepository.findById(project.getId());
+		return new ProjectDto( project ); //making sure it actually worked 
 	}
 	
-	@PostMapping(value="/loadMemberToProject/{email}")
-	public Optional<Project> addMemberToProject (@RequestBody final Project project,@PathVariable("email") String email){
+	
+	// TODO: the contains method doesnt work, CHECK FOR DUPLICATES
+	@PostMapping("/loadMemberToProject/{email}")
+	public ProjectDto addMemberToProject (@RequestBody final ProjectDto projectDto,@PathVariable("email") String email){
 		//can be improved!
+		
+		Optional<Project> projectt= projectRepository.findById(projectDto.getId());
+		Project project = projectt.get();
 		User user= userRepository.findByEmail(email);
+		
 		user.addProjectMember(project);
 		userRepository.save(user);
 		project.addMember(user);
 		projectRepository.save(project);
-		return projectRepository.findById(project.getId());
+		return new ProjectDto(project); 
 	}
 	
-	@PostMapping(value="/applyMemberToProject/{email}")
-	public Optional<Project> applyMemberToProject (@RequestBody final Project project,@PathVariable("email") String email){
+	
+	@PostMapping("/applyMemberToProject/{email}")
+	public ProjectDto applyMemberToProject (@RequestBody final ProjectDto projectDto,@PathVariable("email") String email){
+		
+
+		Optional<Project> projectt= projectRepository.findById(projectDto.getId());
+		Project project = projectt.get();
 		User user= userRepository.findByEmail(email);
+		
 		user.addProjectApplied(project);
 		userRepository.save(user);
 		project.addApplicant(user);;
 		projectRepository.save(project);
-		return projectRepository.findById(project.getId());
+		return new ProjectDto(project);
 	}
 	
-	@PostMapping(value="/acceptMemberToProject/{email}")
-	public Optional<Project> acceptMemberToProject (@RequestBody final Project project,@PathVariable("email") String email){
+	//WORKS
+	@PostMapping("/acceptMemberToProject/{email}")
+	public ProjectDto acceptMemberToProject (@RequestBody final ProjectDto projectDto,@PathVariable("email") String email){
+		
+
+		Optional<Project> projectt= projectRepository.findById(projectDto.getId());
+		Project project = projectt.get();
+		
 		User user= userRepository.findByEmail(email);
 		user.removeProjectApplied(project);
 		user.addProjectMember(project);
@@ -146,19 +177,52 @@ public class Resource {
 		project.removeApplicant(user);
 		project.addMember(user);
 		projectRepository.save(project);
-		return projectRepository.findById(project.getId());
+		
+		return new ProjectDto(project);
 	}
 	
 	
-	
-	
-	
-	
-	
 
-	@PostMapping(value="/loadLabel")
+	@PostMapping("/loadLabel")
 	public List<Label> persistProject (@RequestBody final Label label){
 		labelRepository.save(label);
 		return labelRepository.findAll();
 	}
+	
+	
+	
+	//////////////////// CONVERTING TO DTOS ///////////////////////	
+	
+	
+	
+	public ArrayList<UserDto> convertUsersToDto(List<User> l){
+		ArrayList<UserDto> users= new ArrayList<UserDto>();
+		for(int i=0; i<l.size(); i++){
+			users.add(new UserDto(l.get(i)));
+		}
+		return users;
+	}
+	
+	public ArrayList<ProjectDto> convertProjectsToDto(List<Project> l){
+		ArrayList<ProjectDto> projects= new ArrayList<ProjectDto>();
+		for(int i=0; i<l.size(); i++){
+			projects.add(new ProjectDto(l.get(i)));
+		}
+		return projects;
+	}
+	
+	private List<ProjectDto> convertProjectsToDto(Optional<Project> list) {
+		ArrayList<ProjectDto> projects= new ArrayList<ProjectDto>();
+		if(list.isPresent()) {
+			List<Project> l= (List<Project>) list.get();
+			for(int i=0; i<l.size(); i++){
+				projects.add(new ProjectDto(l.get(i)));
+			}
+			return projects;
+		}else {
+			return null;
+		}
+	}
+	
+	
 }

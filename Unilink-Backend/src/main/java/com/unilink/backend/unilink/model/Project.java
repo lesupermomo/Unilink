@@ -13,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
+import com.unilink.backend.unilink.dto.ProjectDto;
+
 
 @Entity
 public class Project {
@@ -51,7 +53,19 @@ public class Project {
 	@ManyToOne
 	private User creator;
 	
+	public Project() {
 	
+	}
+	
+	public Project(ProjectDto projectDto) {
+		
+		this.id=projectDto.getId();
+		this.projectName=projectDto.getProjectName();
+		this.description=projectDto.getDescription();
+		this.status=projectDto.getStatus();
+		
+	}
+
 	public User getCreator(){
 		return this.creator;
 	}
@@ -74,7 +88,11 @@ public class Project {
 		if(this.applicants==null) {
 			this.applicants=new ArrayList<User>();
 		}
-		applicants.add(e);
+		if(!applicants.contains(e)) {
+			//do nothing
+			applicants.add(e);
+		}
+		
 	}
 	
 	public void setCreator(User user) {
@@ -104,6 +122,16 @@ public class Project {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	
+	public Status getStatus() {
+		return this.status;
+	}
+	
+	public void setStatus(Status status) {
+		this.status= status;
+	}
+	
+
 
 	public void removeApplicant(User user) {
 		this.applicants.remove(user);
