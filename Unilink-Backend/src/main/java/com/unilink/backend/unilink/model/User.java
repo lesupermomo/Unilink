@@ -41,7 +41,7 @@ public class User {
 	private Boolean isActive;
 	
 	@Column(name="roles")
-	private String roles;
+	private String roles; //ADMIN,USER
 
 	
 	//projects to which the user is a member
