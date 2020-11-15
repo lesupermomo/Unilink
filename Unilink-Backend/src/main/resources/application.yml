@@ -1,11 +1,20 @@
+#spring:
+#        datasource:
+#                driverClassName: com.mysql.cj.jdbc.Driver
+#                url: jdbc:mysql://localhost:3306/unilinkD
+#                username: root
+#                password: yVmonaed24
+#        jpa:
+#                hibernate.ddl-auto: update
+#                generate-ddl: true
+#                show-sql: true
 spring:
         datasource:
-                driverClassName: com.mysql.cj.jdbc.Driver
-                url: jdbc:mysql://localhost:3306/unilinkD
-                username: root
-                password: yVmonaed24
+                driverClassName: org.postgresql.Driver
+                url: jdbc:postgresql://ec2-34-197-141-7.compute-1.amazonaws.com:5432/d54uth8obvaoko
+                username: tdhuxykinyxqrz
+                password: ebb63cd0e511b5e812e7a314a7239352a4863bb8a3ff23f5551aca4853a0403b
         jpa:
                 hibernate.ddl-auto: update
                 generate-ddl: true
                 show-sql: true
-             

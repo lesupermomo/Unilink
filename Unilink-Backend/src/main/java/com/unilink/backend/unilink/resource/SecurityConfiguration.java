@@ -13,15 +13,17 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.unilink.backend.unilink.service.MyUserDetailsService;
+
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    UserDetailsService userDetailsService;
+//    @Autowired
+//    UserDetailsService userDetailsService;
 
 
     @Autowired
-	private UserDetailsService myUserDetailsService;
+	private MyUserDetailsService myUserDetailsService;
 
     @Autowired
 	private JwtRequestFilter jwtRequestFilter;
@@ -29,7 +31,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService);
+        auth.userDetailsService(myUserDetailsService);
     }
 
     @Override
