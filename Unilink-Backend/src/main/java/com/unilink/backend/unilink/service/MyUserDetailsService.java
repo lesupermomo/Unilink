@@ -26,7 +26,7 @@ public class MyUserDetailsService implements UserDetailsService {
   
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-      com.unilink.backend.unilink.model.User user = userRepository.findByEmail(email);
+      com.unilink.backend.unilink.model.Person user = userRepository.findByEmail(email);
       
       if(user.equals(null)) {
       	throw new UsernameNotFoundException("Username or password not found");

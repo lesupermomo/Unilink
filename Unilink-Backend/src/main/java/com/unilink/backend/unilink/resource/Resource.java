@@ -5,8 +5,8 @@ import com.unilink.backend.unilink.dto.CredentialDto;
 import com.unilink.backend.unilink.dto.ProjectDto;
 import com.unilink.backend.unilink.dto.UserDto;
 import com.unilink.backend.unilink.model.Label;
+import com.unilink.backend.unilink.model.Person;
 import com.unilink.backend.unilink.model.Project;
-import com.unilink.backend.unilink.model.User;
 import com.unilink.backend.unilink.repository.LabelRepository;
 import com.unilink.backend.unilink.repository.ProjectRepository;
 import com.unilink.backend.unilink.repository.UserRepository;
@@ -131,7 +131,7 @@ public class Resource {
 	
 	@GetMapping( "/projectsOfUser/{email}")
 	public List<ProjectDto> getAllProjectsOfUser(@PathVariable("email")String email){
-		User user= userRepository.findByEmail(email);
+		Person user= userRepository.findByEmail(email);
 		return convertProjectsToDto(user.getProjectMember());
 
 	}
@@ -140,7 +140,7 @@ public class Resource {
 	public UserDto login (@RequestBody final CredentialDto e){
 		
 		if(e!=null&&e.getEmail()!=null&&e.getPassword()!=null) {
-			User currentUser=userRepository.findByEmail(e.getEmail());
+			Person currentUser=userRepository.findByEmail(e.getEmail());
 			if(currentUser.getPassword().equals(e.getPassword())) {
 				return new UserDto(currentUser);
 			}else {
@@ -153,7 +153,7 @@ public class Resource {
 	
 	@PostMapping("/loadUser")
 	public UserDto persistUser (@RequestBody final UserDto userDto){
-		User user=new User(userDto);
+		Person user=new Person(userDto);
 		userRepository.save(user);
 		return new UserDto(userRepository.findByEmail(user.getEmail()));
 	}
@@ -162,7 +162,7 @@ public class Resource {
 	@PostMapping("/loadProject/{email}")
 	public ProjectDto persistProject (@RequestBody final ProjectDto projectDto,@PathVariable("email") String email){
 
-		User user= userRepository.findByEmail(email);
+		Person user= userRepository.findByEmail(email);
 		Project project= new Project(projectDto);
 		
 		project.setCreator(user);
@@ -180,7 +180,7 @@ public class Resource {
 		
 		Optional<Project> projectt= projectRepository.findById(projectDto.getId());
 		Project project = projectt.get();
-		User user= userRepository.findByEmail(email);
+		Person user= userRepository.findByEmail(email);
 		
 		user.addProjectMember(project);
 		userRepository.save(user);
@@ -196,7 +196,7 @@ public class Resource {
 
 		Optional<Project> projectt= projectRepository.findById(projectDto.getId());
 		Project project = projectt.get();
-		User user= userRepository.findByEmail(email);
+		Person user= userRepository.findByEmail(email);
 		
 		user.addProjectApplied(project);
 		userRepository.save(user);
@@ -213,7 +213,7 @@ public class Resource {
 		Optional<Project> projectt= projectRepository.findById(projectDto.getId());
 		Project project = projectt.get();
 		
-		User user= userRepository.findByEmail(email);
+		Person user= userRepository.findByEmail(email);
 		user.removeProjectApplied(project);
 		user.addProjectMember(project);
 		userRepository.save(user);
@@ -238,7 +238,7 @@ public class Resource {
 	
 	
 	
-	public ArrayList<UserDto> convertUsersToDto(List<User> l){
+	public ArrayList<UserDto> convertUsersToDto(List<Person> l){
 		ArrayList<UserDto> users= new ArrayList<UserDto>();
 		for(int i=0; i<l.size(); i++){
 			users.add(new UserDto(l.get(i)));

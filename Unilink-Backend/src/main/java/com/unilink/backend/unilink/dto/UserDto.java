@@ -1,7 +1,7 @@
 package com.unilink.backend.unilink.dto;
 
 
-import com.unilink.backend.unilink.model.User;
+import com.unilink.backend.unilink.model.Person;
 
 
 public class UserDto {
@@ -31,7 +31,7 @@ public class UserDto {
 		
 	}
 	
-	public UserDto(User user) {
+	public UserDto(Person user) {
 		this.email=user.getEmail();
 		this.firstName=user.getFirstName();
 		this.lastName=user.getLastName();

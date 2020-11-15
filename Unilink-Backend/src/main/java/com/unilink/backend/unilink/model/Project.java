@@ -39,7 +39,7 @@ public class Project {
 	  joinColumns = {@JoinColumn(name = "project_id")}, 
 	  inverseJoinColumns = {@JoinColumn(name = "member_id")}
 	  )
-	private List<User> members;
+	private List<Person> members;
 	
 	@ManyToMany
 	@JoinTable(
@@ -47,11 +47,11 @@ public class Project {
 	  joinColumns = {@JoinColumn(name = "project_id")}, 
 	  inverseJoinColumns = {@JoinColumn(name = "applicant_id")}
 	  )
-	private List<User> applicants;
+	private List<Person> applicants;
 	
 	
 	@ManyToOne
-	private User creator;
+	private Person creator;
 	
 	public Project() {
 	
@@ -66,27 +66,27 @@ public class Project {
 		
 	}
 
-	public User getCreator(){
+	public Person getCreator(){
 		return this.creator;
 	}
 	
-	public List<User> getMember(){
+	public List<Person> getMember(){
 		return members;
 	}
 	
-	public List<User> getApplicants(){
+	public List<Person> getApplicants(){
 		return applicants;
 	}
 	
-	public void addMember(User e) {
+	public void addMember(Person e) {
 		if(this.members==null) {
-			this.members=new ArrayList<User>();
+			this.members=new ArrayList<Person>();
 		}
 		members.add(e);
 	}
-	public void addApplicant(User e) {
+	public void addApplicant(Person e) {
 		if(this.applicants==null) {
-			this.applicants=new ArrayList<User>();
+			this.applicants=new ArrayList<Person>();
 		}
 		if(!applicants.contains(e)) {
 			//do nothing
@@ -95,8 +95,8 @@ public class Project {
 		
 	}
 	
-	public void setCreator(User user) {
-		this.creator=user;
+	public void setCreator(Person person) {
+		this.creator=person;
 	}
 	
 	public Integer getId() {
@@ -131,15 +131,10 @@ public class Project {
 		this.status= status;
 	}
 	
-
-
-	public void removeApplicant(User user) {
-		this.applicants.remove(user);
+	public void removeApplicant(Person person) {
+		this.applicants.remove(person);
 		
 	}
-
-	
-	
 	
 	
 }

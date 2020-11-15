@@ -16,7 +16,7 @@ import com.unilink.backend.unilink.dto.UserDto;
 
 
 @Entity
-public class User {
+public class Person {
 
 	
 //	@GeneratedValue
@@ -57,11 +57,11 @@ public class User {
 	private List<Project> created;
 	
 
-	public User() {
+	public Person() {
 		
 	}
 	
-	public User(UserDto user) {
+	public Person(UserDto user) {
 		this.email=user.getEmail();
 		this.firstName=user.getFirstName();
 	    this.lastName=user.getLastName();

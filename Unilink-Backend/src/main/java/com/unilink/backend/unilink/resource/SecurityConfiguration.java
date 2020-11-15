@@ -51,9 +51,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         		antMatchers("/authenticate").permitAll().
         		antMatchers("/").permitAll().
         		antMatchers("/admin").permitAll().
-               // antMatchers("/allUsers").permitAll().
+        		antMatchers("/loadUser").permitAll().
+                //antMatchers("/allUsers").permitAll().
                 anyRequest().authenticated().and().//formLogin();
-                formLogin().loginPage("/admin").and(). /** set custom login page*/
+                formLogin().loginPage("/authenticate").and(). /** set custom login page*/
 				exceptionHandling().and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
