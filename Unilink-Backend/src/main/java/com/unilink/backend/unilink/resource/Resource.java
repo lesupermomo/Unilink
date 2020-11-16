@@ -137,11 +137,12 @@ public class Resource {
 	}
 
 	@PostMapping("/loginUser") //userDto {"email":"mail","password":"pass"}
-	public UserDto login (@RequestBody final CredentialDto e){
+	public UserDto login (@RequestBody CredentialDto e){
 		
-		if(e!=null&&e.getEmail()!=null&&e.getPassword()!=null) {
-			Person currentUser=userRepository.findByEmail(e.getEmail());
+		if(e!=null&&(e.getEmail().equals(null)==false)&&(e.getPassword().equals(null)==false)) {
+		    Person currentUser=userRepository.findByEmail(e.getEmail());
 			if(currentUser.getPassword().equals(e.getPassword())) {
+				currentUser.setPassword("null");
 				return new UserDto(currentUser);
 			}else {
 				return null;
@@ -167,7 +168,9 @@ public class Resource {
 		
 		project.setCreator(user);
 		user.addProjectCreator(project);
+		user.addProjectMember(project);
 		userRepository.save(user);
+		project.addMember(user);
 		projectRepository.save(project);
 		return new ProjectDto( project ); //making sure it actually worked 
 	}
@@ -187,6 +190,7 @@ public class Resource {
 		project.addMember(user);
 		projectRepository.save(project);
 		return new ProjectDto(project); 
+	
 	}
 	
 	
@@ -241,6 +245,8 @@ public class Resource {
 	public ArrayList<UserDto> convertUsersToDto(List<Person> l){
 		ArrayList<UserDto> users= new ArrayList<UserDto>();
 		for(int i=0; i<l.size(); i++){
+			UserDto temp=new UserDto(l.get(i));
+			temp.setPassword("null");
 			users.add(new UserDto(l.get(i)));
 		}
 		return users;

@@ -4,6 +4,9 @@ public class CredentialDto { //authentication Request
 	private String email;
 	private String password;
 	
+	public CredentialDto() {
+	}
+	
 	public CredentialDto(String email, String password) {
 		this.email = email;
 		this.password = password;
