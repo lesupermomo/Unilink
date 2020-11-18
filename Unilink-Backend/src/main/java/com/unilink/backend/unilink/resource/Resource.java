@@ -116,6 +116,7 @@ public class Resource {
 		String email= jwtUtil.extractUsername(jwt);
 		
 		Person user= userRepository.findByEmail(email);
+		user.setPassword("");
 		return new UserDto(user);    
 	}
 		
