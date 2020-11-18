@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -106,6 +107,18 @@ public class Resource {
 		return ResponseEntity.ok(new AuthenticationResponse(jwt));
 	}
 	
+	@GetMapping("/userFromJwt")
+	public UserDto greeting(@RequestHeader("Authorization") String language) {
+	    // code that uses the language variable
+		
+		String jwt= language.substring(7);
+		JwtUtil jwtUtil=new JwtUtil();
+		String email= jwtUtil.extractUsername(jwt);
+		
+		Person user= userRepository.findByEmail(email);
+		return new UserDto(user);    
+	}
+		
 	/**
 	 * 
 	 * Starting from here are REST methods to contact load and get projects
@@ -193,6 +206,22 @@ public class Resource {
 	
 	}
 	
+	@PostMapping("/loadMemberToProject/{email}/{projectId}")
+	public ProjectDto addMemberToProject (@PathVariable("projectId") String projectId,@PathVariable("email") String email){
+		//can be improved!
+		
+		
+		Project project =projectRepository.findById(Integer.parseInt(projectId));
+		Person user= userRepository.findByEmail(email);
+		
+		user.addProjectMember(project);
+		userRepository.save(user);
+		project.addMember(user);
+		projectRepository.save(project);
+		return new ProjectDto(project); 
+	
+	}
+	
 	
 	@PostMapping("/applyMemberToProject/{email}")
 	public ProjectDto applyMemberToProject (@RequestBody final ProjectDto projectDto,@PathVariable("email") String email){
@@ -200,6 +229,20 @@ public class Resource {
 
 		Optional<Project> projectt= projectRepository.findById(projectDto.getId());
 		Project project = projectt.get();
+		Person user= userRepository.findByEmail(email);
+		
+		user.addProjectApplied(project);
+		userRepository.save(user);
+		project.addApplicant(user);;
+		projectRepository.save(project);
+		return new ProjectDto(project);
+	}
+	
+	@PostMapping("/applyMemberToProject/{email}/{projectId}")
+	public ProjectDto applyMemberToProject (@PathVariable("projectId") String projectId,@PathVariable("email") String email){
+		
+
+		Project project =projectRepository.findById(Integer.parseInt(projectId));
 		Person user= userRepository.findByEmail(email);
 		
 		user.addProjectApplied(project);
@@ -218,6 +261,23 @@ public class Resource {
 		Project project = projectt.get();
 		
 		Person user= userRepository.findByEmail(email);
+		user.removeProjectApplied(project);
+		user.addProjectMember(project);
+		userRepository.save(user);
+		project.removeApplicant(user);
+		project.addMember(user);
+		projectRepository.save(project);
+		
+		return new ProjectDto(project);
+	}
+	
+	@PostMapping("/acceptMemberToProject/{email}/{projectId}")
+	public ProjectDto acceptMemberToProject (@PathVariable("projectId") String projectId,@PathVariable("email") String email){
+		
+
+		Project project= projectRepository.findById(Integer.parseInt(projectId));
+		Person user= userRepository.findByEmail(email);
+		
 		user.removeProjectApplied(project);
 		user.addProjectMember(project);
 		userRepository.save(user);

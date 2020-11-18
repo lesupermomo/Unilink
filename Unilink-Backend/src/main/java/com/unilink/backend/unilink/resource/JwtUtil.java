@@ -19,7 +19,12 @@ public class JwtUtil {
 
 //	@Value("")
 //	@Value("${jwt.token.secret}")
-    private String secret = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE2MDUwMDg4OTIsImV4cCI6MTYzNjU0NDg5MiwiYXVkIjoid3d3LnVuaWxpbmsuY29tIiwic3ViIjoic3BlZWRzdGVybTFAaG90bWFpbC5jb20iLCJHaXZlbk5hbWUiOiJNb21vIiwiU3VybmFtZSI6Ill2YW4iLCJFbWFpbCI6Impsb2Nhc3NvbkBob3RtYWlsLmNhIiwiUm9sZSI6WyJNYW5hZ2VyIiwiUHJvamVjdCBBZG1pbmlzdHJhdG9yIl19.wEvCtfA6gg_bLcj_MeLii25vk-CSAW51wgiAFDNOxPI";//Keys.secretKeyFor(SignatureAlgorithm.HS512);
+    
+	public JwtUtil() {
+		
+	}
+	
+	private String secret = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE2MDUwMDg4OTIsImV4cCI6MTYzNjU0NDg5MiwiYXVkIjoid3d3LnVuaWxpbmsuY29tIiwic3ViIjoic3BlZWRzdGVybTFAaG90bWFpbC5jb20iLCJHaXZlbk5hbWUiOiJNb21vIiwiU3VybmFtZSI6Ill2YW4iLCJFbWFpbCI6Impsb2Nhc3NvbkBob3RtYWlsLmNhIiwiUm9sZSI6WyJNYW5hZ2VyIiwiUHJvamVjdCBBZG1pbmlzdHJhdG9yIl19.wEvCtfA6gg_bLcj_MeLii25vk-CSAW51wgiAFDNOxPI";//Keys.secretKeyFor(SignatureAlgorithm.HS512);
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
