@@ -24,6 +24,7 @@ public class Project {
 	@Column(name="id")
 	private Integer id;
 	
+
 	@Column(name="projectName")
 	private String projectName;
 	
@@ -48,6 +49,14 @@ public class Project {
 	  inverseJoinColumns = {@JoinColumn(name = "applicant_id")}
 	  )
 	private List<Person> applicants;
+	
+	@ManyToMany
+	@JoinTable(
+	  name = "project_label", 
+	  joinColumns = {@JoinColumn(name = "project_id")}, 
+	  inverseJoinColumns = {@JoinColumn(name = "label_id")}
+	  )
+	private List<Label> labels;
 	
 	
 	@ManyToOne
@@ -78,6 +87,14 @@ public class Project {
 		return applicants;
 	}
 	
+	public List<Label> getLabels() {
+		return labels;
+	}
+
+	public void setLabels(List<Label> labels) {
+		this.labels = labels;
+	}
+	
 	public void addMember(Person e) {
 		if(this.members==null) {
 			this.members=new ArrayList<Person>();
@@ -89,10 +106,18 @@ public class Project {
 			this.applicants=new ArrayList<Person>();
 		}
 		if(!applicants.contains(e)) {
-			//do nothing
 			applicants.add(e);
 		}
 		
+	}
+	
+	public void addLabel(Label l) {
+		if(this.labels==null) {
+			this.labels=new ArrayList<Label>();
+		}
+		if(!labels.contains(l)) {
+			labels.add(l);
+		}
 	}
 	
 	public void setCreator(Person person) {
@@ -134,6 +159,14 @@ public class Project {
 	public void removeApplicant(Person person) {
 		this.applicants.remove(person);
 		
+	}
+	
+	public void removeMember(Person person) {
+		this.members.remove(person);
+	}
+	
+	public void removeLabel(Label l) {
+		this.labels.remove(l);
 	}
 	
 	

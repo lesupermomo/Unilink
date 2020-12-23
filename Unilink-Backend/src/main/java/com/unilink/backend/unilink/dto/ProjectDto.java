@@ -21,6 +21,10 @@ public class ProjectDto {
 	
 	private List<UserDto> applicants;
 	
+	private List<LabelDto> labels;
+	
+	
+
 	
 
 	private UserDto creator;
@@ -38,6 +42,7 @@ public class ProjectDto {
 		this.status=project.getStatus();
 		members=new ArrayList<UserDto>();
 		applicants= new ArrayList<UserDto>();
+		labels=new ArrayList<LabelDto>();
 		
 		if(project.getMember()!=null) {
 			for(int i=0; i<project.getMember().size(); i++) {
@@ -49,6 +54,13 @@ public class ProjectDto {
 		if(project.getApplicants()!=null) {
 			for(int i=0; i<project.getApplicants().size(); i++) {
 				applicants.add(new UserDto(project.getApplicants().get(i)));
+				
+			}
+		}
+		
+		if(project.getApplicants()!=null) {
+			for(int i=0; i<project.getLabels().size(); i++) {
+				labels.add(new LabelDto(project.getLabels().get(i)));
 				
 			}
 		}
@@ -69,6 +81,14 @@ public class ProjectDto {
 	
 	public List<UserDto> getApplicants(){
 		return applicants;
+	}
+	
+	public List<LabelDto> getLabels() {
+		return labels;
+	}
+
+	public void setLabels(List<LabelDto> labels) {
+		this.labels = labels;
 	}
 	
 	public Status getStatus() {
