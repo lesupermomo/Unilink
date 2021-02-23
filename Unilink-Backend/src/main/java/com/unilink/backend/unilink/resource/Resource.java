@@ -177,54 +177,9 @@ public class Resource {
 			return projects;
 	}
 	
+
 	@GetMapping( "/searchFull/{words}")
 	public List<ProjectDto> searchFull(@PathVariable("words")String words){
-		ArrayList<ProjectDto> projectsFound ;
-		Label label;
-		ArrayList<Integer> ids=new ArrayList<Integer>();
-		ArrayList<ProjectDto> projects=new ArrayList<ProjectDto>();
-		String[] wordList = words.split("\\s+");
-		
-		for (int i = 0; i < wordList.length; i++) {
-			//searches for the currently seen word
-			projectsFound=convertProjectsToDto(projectRepository.findByProjectNameContainingOrDescriptionContaining(wordList[i], wordList[i]));
-			for (ProjectDto x : projectsFound) {
-				if(ids.contains(x.getId())==false) {
-					projects.add(x);
-					ids.add(x.getId());
-				}
-				
-			}
-			//search for labels as full string
-			if(i==0) {
-				label= labelRepository.findBylabelName(words);
-				if(label!=null&&label.equals(null)==false) {
-					projectsFound= convertProjectsToDto(label.getProjects());
-					for (ProjectDto x : projectsFound) {
-						if(ids.contains(x.getId())==false) {
-							projects.add(x);
-							ids.add(x.getId());
-						}
-					}
-				}
-			}
-			//searchers for labels as individual words
-			label= labelRepository.findBylabelName(wordList[i]);
-			if(label!=null&&label.equals(null)==false) {
-				projectsFound= convertProjectsToDto(label.getProjects());
-				for (ProjectDto x : projectsFound) {
-					if(ids.contains(x.getId())==false) {
-						projects.add(x);
-						ids.add(x.getId());
-					}
-				}
-			}
-		}
-			return projects;
-	}
-	
-	@GetMapping( "/searchFullCapital/{words}")
-	public List<ProjectDto> searchFullCapital(@PathVariable("words")String words){
 		ArrayList<Integer> ids=new ArrayList<Integer>();
 		ArrayList<ProjectDto> projects=new ArrayList<ProjectDto>();
 		String[] wordList = words.split("\\s+");
