@@ -222,6 +222,85 @@ public class Resource {
 		}
 			return projects;
 	}
+	
+	@GetMapping( "/searchFullCapital/{words}")
+	public List<ProjectDto> searchFullCapital(@PathVariable("words")String words){
+		ArrayList<Integer> ids=new ArrayList<Integer>();
+		ArrayList<ProjectDto> projects=new ArrayList<ProjectDto>();
+		String[] wordList = words.split("\\s+");
+		List<Project> list=projectRepository.findAll();
+		
+		for (int i = 0; i < wordList.length; i++) {
+			//searches for the currently seen word
+			
+			
+			for (Project x : list) {
+				
+				String[] descriptionWords = x.getDescription().split("\\s+");
+				String title =  x.getProjectName();
+				String[] projectWords = title.split("\\s+");
+				List<Label> labelList = x.getLabels();
+				
+				
+				//description 
+				for (int j = 0; j < descriptionWords.length; j++) {
+					if(wordList[i].toLowerCase().compareTo(descriptionWords[j].toLowerCase())==0) {
+						if(ids.contains(x.getId())==false) {
+							projects.add(new ProjectDto(x));
+							ids.add(x.getId());
+						}	
+					}
+				}
+				
+				//Project title
+				for (int j = 0; j < projectWords.length; j++) {
+					if(wordList[i].toLowerCase().compareTo(projectWords[j].toLowerCase())==0) {
+						if(ids.contains(x.getId())==false) {
+							projects.add(new ProjectDto(x));
+							ids.add(x.getId());
+						}	
+					}
+				}
+				
+				//Project full title
+//				if(i==0) {
+//					if(words.toLowerCase().compareTo(title.toLowerCase())==0) {
+//						if(ids.contains(x.getId())==false) {
+//							projects.add(new ProjectDto(x));
+//							ids.add(x.getId());
+//						}	
+//					}
+//				}
+//				
+				//Project labels
+				for (Label label : labelList) {
+					if(label.getLabelName().toLowerCase().compareTo(wordList[i].toLowerCase())==0) {
+						if(ids.contains(x.getId())==false) {
+							projects.add(new ProjectDto(x));
+							ids.add(x.getId());
+						}	
+					}
+				}
+//				
+//				//Project full 
+				if(i==0) {
+					for (Label label : labelList) {
+						if(label.getLabelName().toLowerCase().compareTo(words.toLowerCase())==0) {
+							if(ids.contains(x.getId())==false) {
+								projects.add(new ProjectDto(x));
+								ids.add(x.getId());
+							}	
+						}
+					}
+				}
+				
+			}
+		
+			
+		}
+		
+			return projects;
+	}
 
 	@GetMapping( "/projectsOfUser/{email}")
 	public List<ProjectDto> getAllProjectsOfUser(@PathVariable("email")String email){
